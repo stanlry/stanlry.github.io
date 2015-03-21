@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Banana Pi with cheap WiFi Adapter [MT7601] | Stanlry</title>
+  <meta name="viewport" content="width=device-width">
+  <meta name="description" content="Environment
+
+Banana Pi
+Tencent WiFi adapter (MT7601)
+Bananian 14.11 with kernel 3.4.104
+MT7601 Driver
+
+Download driver from mediatek and decompress it.
+Plug in the WiFi adapter, use lsusb to see your">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Banana Pi with cheap WiFi Adapter [MT7601]">
+<meta property="og:url" content="http://stanlry.github.com/2015/03/21/Banana-Pi-with-cheap-WiFi-Adapter-MT7601/index.html">
+<meta property="og:site_name" content="Stanlry">
+<meta property="og:description" content="Environment
+
+Banana Pi
+Tencent WiFi adapter (MT7601)
+Bananian 14.11 with kernel 3.4.104
+MT7601 Driver
+
+Download driver from mediatek and decompress it.
+Plug in the WiFi adapter, use lsusb to see your">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Banana Pi with cheap WiFi Adapter [MT7601]">
+<meta name="twitter:description" content="Environment
+
+Banana Pi
+Tencent WiFi adapter (MT7601)
+Bananian 14.11 with kernel 3.4.104
+MT7601 Driver
+
+Download driver from mediatek and decompress it.
+Plug in the WiFi adapter, use lsusb to see your">
+  
+    <link rel="alternative" href="http://feeds.feedburner.com/xxxxxly" title="Stanlry" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="favicon.ico">
+  
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  
+
+</head>
+<header id="header" class="inner">
+  <h1>
+    <a href="/" id="logo">Stanlry</a>
+  </h1>
+  
+</div>
+</header>
+<body>
+  <div id="content" class="inner">
+        <article id="post-Banana-Pi-with-cheap-WiFi-Adapter-MT7601" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <time datetime="2015-03-21T02:36:29.000Z" itemprop="datePublished">2015-03-21</time>
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+    <h3 itemprop="name">
+      <a class="article-title" href="/2015/03/21/Banana-Pi-with-cheap-WiFi-Adapter-MT7601/">Banana Pi with cheap WiFi Adapter [MT7601]</a>
+    </h3>
+  
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Environment</p>
+<ul>
+<li>Banana Pi</li>
+<li><a href="http://wifi.qq.com/" target="_blank" rel="external">Tencent WiFi adapter (MT7601)</a></li>
+<li><a href="https://www.bananian.org/" target="_blank" rel="external">Bananian 14.11</a> with kernel 3.4.104</li>
+<li><a href="http://www.mediatek.com/en/downloads/mt7601u-usb" target="_blank" rel="external">MT7601 Driver</a></li>
+</ul>
+<p>Download driver from mediatek and decompress it.</p>
+<p>Plug in the WiFi adapter, use lsusb to see your device USB ID.<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">root@bpi ~ <span class="comment"># lsusb</span></span><br><span class="line">Bus <span class="number">003</span> Device <span class="number">002</span>: ID <span class="number">2</span>a5f:<span class="number">1000</span></span><br></pre></td></tr></table></figure></p>
+<p>In the driver directory, edit common/rtusb_dev_id.c, add your usb device id under line 43<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#ifdef MT7601U</span></span><br><span class="line">    &#123;USB_DEVICE(<span class="number">0x148f</span>,<span class="number">0x6370</span>)&#125;, <span class="comment">/* Ralink 6370*/</span></span><br><span class="line">    &#123;USB_DEVICE(<span class="number">0x148f</span>,<span class="number">0x7601</span>)&#125;, <span class="comment">/* MT 6370 */</span></span><br></pre></td></tr></table></figure></p>
+<p>In my case, I added<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;USB_DEVICE(<span class="number">0x2a5f</span>,<span class="number">0x1000</span>)&#125;, <span class="comment">/* Tencent WIFI */</span></span><br></pre></td></tr></table></figure></p>
+<p>Compile the MT7601 driver, you need to install build-essential and linux-headers.<br>For linux-headers, you can it from <a href="http://dl.bananian.org/packages/pool/main/l/linux-upstream/linux-headers-3.4.104+_1.2_armhf.deb" target="_blank" rel="external">Official Bananian Linux Repository</a>.</p>
+<p>Compile the MT7601 driver<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">root@bpi ~ <span class="comment"># make</span></span><br><span class="line">root@bpi ~ <span class="comment"># make install</span></span><br></pre></td></tr></table></figure></p>
+<p>If you see this error, go the usr/src/linux-headers-3.4.104+ and run “make scripts”.<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scripts/basic/fixdep: <span class="number">1</span>: scripts/basic/fixdep: Syntax error: end of file unexpected (expecting <span class="string">")"</span>)</span><br></pre></td></tr></table></figure></p>
+<p>Load the module see if it gives any error. </p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root@bpi ~ # modeprobe mt7601Usta</span><br></pre></td></tr></table></figure>
+<p>And check dmesg. If the follow error shows.<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ERROR: <span class="number">256</span> KiB atomic DMA coherent pool is too small!</span><br><span class="line">Please increase it with coherent_pool= kernel parameter!</span><br></pre></td></tr></table></figure></p>
+<p>Increase the coherent pool to 2MB, edit uEnv.txt and add coherent_pool=2M to the bootargs line. uEnv.txt in under the first FAT partition of the SD card<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">root@bpi ~ <span class="comment"># lsblk</span></span><br><span class="line">NAME        MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT</span><br><span class="line">mmcblk0     <span class="number">179</span>:<span class="number">0</span>    <span class="number">0</span>   <span class="number">7.4</span>G  <span class="number">0</span> disk</span><br><span class="line">├─mmcblk0p1 <span class="number">179</span>:<span class="number">1</span>    <span class="number">0</span>    <span class="number">20</span>M  <span class="number">0</span> part</span><br><span class="line">└─mmcblk0p2 <span class="number">179</span>:<span class="number">2</span>    <span class="number">0</span>   <span class="number">7.4</span>G  <span class="number">0</span> part /</span><br><span class="line">root@bpi ~ <span class="comment"># mount /dev/mmcblk0p1 /mnt</span></span><br><span class="line">root@bpi ~ <span class="comment"># vim /mnt/uEnv.txt</span></span><br></pre></td></tr></table></figure></p>
+<p>Reboot the banana pi, and you should see the ra0 interface</p>
+<p>Connect to your WiFi AP, edit /etc/network/interfaces, add the following lines.<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">auto ra0</span><br><span class="line">        allow-hotplug ra0</span><br><span class="line">        iface ra0 inet dhcp    <span class="comment"># use dhcp</span></span><br><span class="line">        wpa-ssid <span class="string">"[your ssid]"</span></span><br><span class="line">        wpa-psk <span class="string">"[your password]"</span></span><br><span class="line">        wpa-scan-ssid <span class="number">1</span> <span class="comment"># add this if you are using hidden ssid</span></span><br></pre></td></tr></table></figure></p>
+<p>Restart the network<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root@bpi ~ <span class="comment"># /etc/init.d/networking restart</span></span><br></pre></td></tr></table></figure></p>
+<h1 id="References:">References:</h1><p><a href="http://blog.riyas.org/2014/07/setting-up-mediatek-ralink-wifi-adapter-Raspbmc3.12.21-Raspberry-PI-mt7601.html" target="_blank" rel="external">Setting up a MediaTek Ralink WiFi Adapter in Raspbmc 3.12.21-Raspberry PI [mt7601] </a></p>
+<p><a href="https://dev.bananian.org/view.php?id=12" target="_blank" rel="external">dev.bananian.org</a></p>
+<p><a href="http://forum.lemaker.org/thread-1817-1-1-.html" target="_blank" rel="external">Problems with kernel parameter coherent_pool</a></p>
+<p><a href="http://blog.csdn.net/anseven/article/details/41144553" target="_blank" rel="external">如何在Ubuntu下使用全民wifi? </a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+      
+    </footer>
+  </div>
+</article>
+
+
+        <hr class="footer-line">
+  </div>
+<footer id="footer" class="inner">
+  <div id="footer-info">
+    &copy; 2015 Stanlry Chong<br>
+     <a href="https://github.com/tcnksm/mnmlpress">mnmlpress</a> // Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+  </div>
+</footer>
+
+
+<script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+</body>
+</html>
